@@ -4,6 +4,13 @@ from io import BytesIO
 import base64
 from django.http import HttpResponse
 import io
+import json
+import os
+
+# Так Даня посоветовал сделать
+STYLES_PATH = os.path.join(os.path.dirname(__file__), "qr_styles.json")
+with open(STYLES_PATH, "r", encoding="utf-8") as f:
+    QR_STYLES = json.load(f)
 
 
 def home(request):
@@ -12,21 +19,10 @@ def home(request):
         data = request.POST.get("data", "")
         style = request.POST.get("style", "default")
 
-        if style == "style1":
-            fill_color = "#98FF98"
-            back_color = "#FFB6C1"
-        elif style == "style2":
-            fill_color = "#33FF57"
-            back_color = "#000000"
-        elif style == "style3":
-            fill_color = "#FF1493"
-            back_color = "#000000"
-        elif style == "style4":
-            fill_color = "white"
-            back_color = "black"
-        else:
-            fill_color = "#000000"
-            back_color = "#FFFFFF"
+        
+        style_conf = QR_STYLES.get(style, QR_STYLES["default"])
+        fill_color = style_conf["fill_color"]
+        back_color = style_conf["back_color"]
 
         if data:
             qr = qrcode.QRCode(
