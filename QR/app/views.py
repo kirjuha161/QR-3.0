@@ -4,13 +4,8 @@ from io import BytesIO
 import base64
 from django.http import HttpResponse
 import io
-import json
 import os
-
-# Так Даня посоветовал сделать
-STYLES_PATH = os.path.join(os.path.dirname(__file__), "qr_styles.json")
-with open(STYLES_PATH, "r", encoding="utf-8") as f:
-    QR_STYLES = json.load(f)
+from django.conf import settings
 
 
 def home(request):
@@ -19,8 +14,7 @@ def home(request):
         data = request.POST.get("data", "")
         style = request.POST.get("style", "default")
 
-        
-        style_conf = QR_STYLES.get(style, QR_STYLES["default"])
+        style_conf = settings.QR_STYLES.get(style, settings.QR_STYLES["default"])
         fill_color = style_conf["fill_color"]
         back_color = style_conf["back_color"]
 
