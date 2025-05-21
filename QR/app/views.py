@@ -13,8 +13,8 @@ def home(request):
         style = request.POST.get("style", "default")
 
         if style == "style1":
-            fill_color = "#98FF98"
-            back_color = "#FFB6C1"
+            fill_color = "#33FF57" 
+            back_color = "#FFFFFF"
         elif style == "style2":
             fill_color = "#33FF57"
             back_color = "#000000"
