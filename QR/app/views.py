@@ -4,6 +4,8 @@ from io import BytesIO
 import base64
 from django.http import HttpResponse
 import io
+import os
+from django.conf import settings
 
 
 def home(request):
@@ -12,6 +14,7 @@ def home(request):
         data = request.POST.get("data", "")
         style = request.POST.get("style", "default")
 
+<<<<<<< HEAD
         if style == "style1":
             fill_color = "#33FF57" 
             back_color = "#FFFFFF"
@@ -27,6 +30,11 @@ def home(request):
         else:
             fill_color = "#000000"
             back_color = "#FFFFFF"
+=======
+        style_conf = settings.QR_STYLES.get(style, settings.QR_STYLES["default"])
+        fill_color = style_conf["fill_color"]
+        back_color = style_conf["back_color"]
+>>>>>>> a4538e012388204f8738bc0dd1b989e846f7b3db
 
         if data:
             qr = qrcode.QRCode(
