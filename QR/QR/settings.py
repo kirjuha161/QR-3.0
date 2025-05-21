@@ -113,7 +113,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 QR_STYLES = {
     "default": {"fill_color": "#000000", "back_color": "#FFFFFF"},
-    "style1": {"fill_color": "#98FF98", "back_color": "#FFB6C1"},
+    "style1": {"fill_color": "#33FF57", "back_color": "#FFFFFF"},
     "style2": {"fill_color": "#33FF57", "back_color": "#000000"},
     "style3": {"fill_color": "#FF1493", "back_color": "#000000"},
     "style4": {"fill_color": "white", "back_color": "black"},
