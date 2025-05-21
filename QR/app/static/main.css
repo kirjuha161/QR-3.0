@@ -27,33 +27,33 @@ form input[type="text"] {
     padding: 10px;
     font-size: 1rem;
     margin-bottom: 15px;
-    width: 500px; /* Увеличена длина строки ввода */
-    background-color: black; /* Черный фон */
-    color: white; /* Белый текст */
-    border: none; /* Убираем ободок */
+    width: 500px; 
+    background-color: black; 
+    color: white; 
+    border: none; 
     border-radius: 15px;
 }
 
 form input[type="text"]::placeholder {
-    color: #ccc; /* Светло-серый текст для placeholder */
+    color: #ccc; 
 
 }
 
 
 
 #showModalBtn {
-     padding: 0; /* Убираем внутренние отступы */
-    font-size: 1.7rem; /* Увеличиваем размер текста */
-    color: black; /* Цвет текста */
-    background: none; /* Убираем фон */
-    border: none; /* Убираем обводку */
-    cursor: pointer; /* Указываем, что это кнопка */
-    text-decoration: none; /* Убираем подчеркивание */
-        transition: transform 0.3s ease; /* Анимация увеличения */
+    padding: 0; 
+    font-size: 1.7rem; 
+    color: black; 
+    background: none; 
+    border: none; 
+    cursor: pointer; 
+    text-decoration: none; 
+        transition: transform 0.3s ease; 
 }
 
 #showModalBtn:hover {
-    transform: scale(1.2); /* Увеличение кнопки при наведении */
+    transform: scale(1.2);
 }
 
 .modal {
@@ -77,8 +77,8 @@ form input[type="text"]::placeholder {
         background: linear-gradient(0deg, rgba(72, 222, 224, 1) 0%, rgba(224, 189, 112, 1) 100%);
         padding: 20px 24px;
         border: 1px solid #888;
-        width: 300px;         /* было 350px, делаем меньше */
-        min-height: 100px;    /* было 120px, делаем меньше */
+        width: 300px;         
+        min-height: 100px;    
         text-align: center;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         border-radius: 10px;
@@ -103,7 +103,7 @@ form input[type="text"]::placeholder {
         gap: 16px;
         margin-top: 0;
         padding: 0;
-        transform: translateY(160px); /* добавьте эту строку - сдвиг на 20px вниз */
+        transform: translateY(160px); 
     } 
 
     #qrImage {
@@ -175,7 +175,7 @@ form input[type="text"]::placeholder {
         font-weight: bold;
         box-shadow: 0 3px 6px rgba(0,0,0,0.15);
         transition: background 0.3s;
-        margin: 0 auto;      /* центрирует кнопку по горизонтали */
+        margin: 0 auto;    
         display: block;
     }
 
