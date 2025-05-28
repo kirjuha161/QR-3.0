@@ -15,7 +15,7 @@
         {% csrf_token %}
         <input type="text" id="data" name="data" placeholder="Введите ссылку" required>
         <input type="hidden" id="submitted" name="submitted" value="true">
-        <button type="submit" id="showModalBtn">Generate</button>
+        <button type="submit" id="showModalBtn">Сгенерировать QR</button>
     </form>
 
     {% include 'app/modal.html' %}

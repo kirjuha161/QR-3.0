@@ -4,7 +4,6 @@
         <h2 class="qr-title">Ваш QR код</h2>
         <div class="qr-container">
             <img id="qrImage" src="{{ data }}" alt="QR Code">
-            <button id="downloadBtn" class="download-btn" type="button">Скачать</button>
         </div>
         <form id="styleForm" method="post">
             {% csrf_token %}
@@ -19,7 +18,7 @@
                 <button type="button" name="style" value="style3" class="style-btn"
                     onclick="changeStyle('style3')">Стиль 3</button>
                 <button type="button" name="style" value="style4" class="style-btn"
-                    onclick="changeStyle('style4')">Инверс</button>
+                    onclick="changeStyle('style4')">Инверсивный</button>
             </div>
         </form>
     </div>
@@ -45,12 +44,11 @@
         transform: translate(-50%, -50%);
         background: #48dee0;
         background: linear-gradient(0deg, rgba(72, 222, 224, 1) 0%, rgba(224, 189, 112, 1) 100%);
-        padding: 20px;  
+        padding: 12px 20px;
         border: 1px solid #888;
-        width: 650px;   
-        min-height: 40px;
-        height: auto;
-        text-align: center;
+        width: 1000px;
+        min-height: 120px;
+        text-align: left;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         border-radius: 10px;
         z-index: 2;
@@ -65,6 +63,14 @@
         margin-bottom: 10px;
         font-size: 20px;
         font-weight: bold;
+    }
+
+    .qr-container {
+        position: absolute;
+        right: 450px;
+        bottom: 220px;
+        margin: 0;
+        padding: 0;
     }
 
     #qrImage {
@@ -124,104 +130,62 @@
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         background: linear-gradient(135deg, #4e0ecf, #1b5fdc);
     }
-
-    .download-btn {
-        background: linear-gradient(135deg, #ff416c, #ff4b2b);
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 12px;
-        cursor: pointer;
-        font-size: 16px;
-        font-family: 'Arial', sans-serif;
-        font-weight: bold;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        margin: 0;
-        transition: all 0.3s ease;
-    }
-
-    .download-btn:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
-        background: linear-gradient(135deg, #ff4b2b, #ff416c);
-    }
-
-    .download-btn:active {
-        transform: translateY(1px);
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        background: linear-gradient(135deg, #c0392b, #8e44ad);
-    }
 </style>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const modal = document.getElementById("qrModal");
+    const modal = document.getElementById("qrModal");
+    const closeBtn = document.querySelector(".close");
 
-        function setDownloadHandler() {
-            const downloadBtn = document.getElementById("downloadBtn");
-            const qrImage = document.getElementById("qrImage");
-            if (downloadBtn && qrImage) {
-                downloadBtn.onclick = function() {
-                    const link = document.createElement('a');
-                    link.href = qrImage.src;
-                    link.download = 'qr_code.png';
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                };
-            }
+    // Открытие модального окна (пример)
+    if (document.getElementById("showModalBtn")) {
+        document.getElementById("showModalBtn").onclick = function () {
+            modal.style.display = "block";
+        };
+    }
+
+    // Закрытие модального окна
+    closeBtn.onclick = function () {
+        modal.style.display = "none";
+    };
+
+    // Закрытие модального окна при клике вне его
+    window.onclick = function (event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
         }
+    };
 
-        function setCloseHandler() {
-            const closeBtn = document.querySelector(".close");
-            if (closeBtn && modal) {
-                closeBtn.onclick = function () {
+    // Функция для изменения стиля QR-кода
+    function changeStyle(style) {
+        const formData = new FormData(document.getElementById("styleForm"));
+        formData.set("style", style);
+
+        fetch("", {
+            method: "POST",
+            body: formData,
+            headers: {
+                "X-CSRFToken": document.querySelector('[name=csrfmiddlewaretoken]').value,
+            },
+        })
+            .then((response) => response.text())
+            .then((html) => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, "text/html");
+                // Обновляем весь modal-content, чтобы кнопки не выпадали
+                document.querySelector('.modal-content').innerHTML =
+                    doc.querySelector('.modal-content').innerHTML;
+                // Повторно навешиваем обработчик закрытия
+                document.querySelector(".close").onclick = function () {
                     modal.style.display = "none";
                 };
-            }
-        }
-
-        
-        if (document.getElementById("showModalBtn")) {
-            document.getElementById("showModalBtn").onclick = function () {
-                modal.style.display = "block";
-            };
-        }
-
-        setDownloadHandler();
-        setCloseHandler();
-
-        
-        window.changeStyle = function(style) {
-            const formData = new FormData(document.getElementById("styleForm"));
-            formData.set("style", style);
-
-            fetch("", {
-                method: "POST",
-                body: formData,
-                headers: {
-                    "X-CSRFToken": document.querySelector('[name=csrfmiddlewaretoken]').value,
-                },
             })
-                .then((response) => response.text())
-                .then((html) => {
-                    const parser = new DOMParser();
-                    const doc = parser.parseFromString(html, "text/html");
-                    document.querySelector('.modal-content').innerHTML =
-                        doc.querySelector('.modal-content').innerHTML;
-                    setDownloadHandler(); 
-                    setCloseHandler();    
-                })
-                .catch((error) => console.error("Ошибка:", error));
-        }
+            .catch((error) => console.error("Ошибка:", error));
+    }
 
-        
-        const data = "{{ data|default_if_none:''|escapejs }}";
-        const submitted = "{{ request.POST.submitted|default_if_none:''|escapejs }}";
-        if (data && data !== "" && submitted === "true") {
-            modal.style.display = "block";
-        }
-    });
+    // Показываем модальное окно при загрузке страницы, если QR-код доступен
+    const data = "{{ data|default_if_none:''|escapejs }}";
+    const submitted = "{{ request.POST.submitted|default_if_none:''|escapejs }}";
+    if (data && data !== "" && submitted === "true") {
+        modal.style.display = "block";
+    }
 </script>
