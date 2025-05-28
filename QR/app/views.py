@@ -9,6 +9,7 @@ from django.conf import settings
 
 
 def home(request):
+    """ функция для основной генерации и обработки qr """
     qr_data = None
     if request.method == "POST":
         data = request.POST.get("data", "")
@@ -39,6 +40,7 @@ def home(request):
 
 
 def qr_modal(request):
+    """Функция для отоброжения в модалке, а не на галваной странице"""
     data = None
     if request.method == "POST":
         qr_data = request.POST.get("data", "")
