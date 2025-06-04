@@ -28,6 +28,9 @@ document.addEventListener("DOMContentLoaded", function() {
     setCloseHandler();
 
     window.changeStyle = function(style) {
+        const modalContent = document.querySelector('.modal-content');
+        modalContent.classList.add('loading');
+
         const formData = new FormData(document.getElementById("styleForm"));
         formData.set("style", style);
 
@@ -42,13 +45,24 @@ document.addEventListener("DOMContentLoaded", function() {
         .then((html) => {
             const parser = new DOMParser();
             const doc = parser.parseFromString(html, "text/html");
-            document.querySelector('.modal-content').innerHTML =
-                doc.querySelector('.modal-content').innerHTML;
-            setTimeout(() => {
+            requestAnimationFrame(() => {
+                modalContent.innerHTML = doc.querySelector('.modal-content').innerHTML;
                 setDownloadHandler();
                 setCloseHandler();
-            }, 0);
+                modalContent.classList.remove('loading');
+            });
         })
-        .catch((error) => console.error("Ошибка:", error));
+        .catch((error) => {
+            console.error("Ошибка:", error);
+            showErrorNotification("Произошла ошибка при обновлении стиля QR-кода");
+        });
     };
+
+    function showErrorNotification(message) {
+        const notification = document.createElement('div');
+        notification.className = 'error-notification';
+        notification.textContent = message;
+        document.body.appendChild(notification);
+        setTimeout(() => notification.remove(), 3000);
+    }
 });

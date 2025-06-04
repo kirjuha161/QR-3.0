@@ -6,19 +6,50 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QR-crayfish</title>
     {% load static %}
+    <!-- Добавляем preload для критических ресурсов -->
+    <link rel="preload" href="{% static 'main.css' %}" as="style">
     <link rel="stylesheet" href="{% static 'main.css' %}">
+    <!-- Добавляем мониторинг производительности -->
+    <script>
+        performance.mark('pageStart');
+        window.addEventListener('load', () => {
+            performance.mark('pageEnd');
+            performance.measure('pageLoad', 'pageStart', 'pageEnd');
+            const timing = performance.getEntriesByName('pageLoad')[0].duration;
+            console.log(`Время загрузки страницы: ${timing}ms`);
+        });
+    </script>
 </head>
 
 <body>
     <h1>QR-crayfish</h1>
-    <form method="post" id="qrForm">
+    <form method="post" id="qrForm" onsubmit="return validateForm()">
         {% csrf_token %}
-        <input type="text" id="data" name="data" placeholder="Введите ссылку" required>
+        <input type="text" id="data" name="data" 
+               placeholder="Введите ссылку" 
+               required
+               pattern="^https?:\/\/.+"
+               title="Введите корректный URL">
         <input type="hidden" id="submitted" name="submitted" value="true">
         <button type="submit" id="showModalBtn">Generate</button>
     </form>
 
     {% include 'app/modal.html' %}
+
+    <script>
+    function validateForm() {
+        try {
+            const input = document.getElementById('data');
+            if (!input.value.trim()) {
+                throw new Error('Поле не может быть пустым');
+            }
+            return true;
+        } catch (error) {
+            console.error('Ошибка валидации:', error);
+            return false;
+        }
+    }
+    </script>
 </body>
 
 </html>
