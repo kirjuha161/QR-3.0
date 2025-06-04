@@ -41,20 +41,43 @@ document.addEventListener("DOMContentLoaded", function() {
                 "X-CSRFToken": document.querySelector('[name=csrfmiddlewaretoken]').value,
             },
         })
-        .then((response) => response.text())
-        .then((html) => {
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.text();
+        })
+        .then(html => {
             const parser = new DOMParser();
             const doc = parser.parseFromString(html, "text/html");
+            const newContent = doc.querySelector('.modal-content');
+            
+            if (!newContent) {
+                throw new Error('Не удалось найти контент модального окна в ответе');
+            }
+
             requestAnimationFrame(() => {
-                modalContent.innerHTML = doc.querySelector('.modal-content').innerHTML;
+                // Сохраняем ссылку на старое изображение
+                const oldImage = modalContent.querySelector('#qrImage');
+                const oldImageSrc = oldImage ? oldImage.src : null;
+
+                modalContent.innerHTML = newContent.innerHTML;
+
+                // Проверяем новое изображение
+                const newImage = modalContent.querySelector('#qrImage');
+                if (newImage && !newImage.src && oldImageSrc) {
+                    newImage.src = oldImageSrc;
+                }
+
                 setDownloadHandler();
                 setCloseHandler();
                 modalContent.classList.remove('loading');
             });
         })
-        .catch((error) => {
+        .catch(error => {
             console.error("Ошибка:", error);
             showErrorNotification("Произошла ошибка при обновлении стиля QR-кода");
+            modalContent.classList.remove('loading');
         });
     };
 
